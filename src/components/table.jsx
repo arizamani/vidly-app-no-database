@@ -1,5 +1,5 @@
 
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import * as db from '../services/fakeMovieService';
 
 export default function Table(){
@@ -17,22 +17,26 @@ export default function Table(){
     );
 
     const removeItem = (id) => {
-        setItems( array => array.filter( item => item._id !== id));
+        setItems( array => array.filter( item => item._id !== id));       
         setCounter(c => c-=1);
     };
-    const refactorTitle = count === undefined || count === 0 ? 'There are no movies in the databse.' : `Showing ${count} movies in the database.`;
+
+    let refactorTableHeader = <tr><th>Title</th><th>Genre</th><th>Stock</th><th>Rate</th></tr>;
+    const refactorTitle = () => {
+        if (count === undefined || count === 0 ) {
+            refactorTableHeader = null;
+            return 'There are no movies in the databse.';
+        }else{
+            return `Showing ${count} movies in the database.`;
+        }   
+    };
 
     return (
         <>
-            <h1>{refactorTitle}</h1>
+            <h1>{refactorTitle()}</h1>
             <table className="table mt-4">
                 <thead className='border-bottom'>
-                    <tr>
-                        <th>Title</th>
-                        <th>Genre</th>
-                        <th>Stock</th>
-                        <th>Rate</th>
-                    </tr>
+                    {refactorTableHeader}
                 </thead>
                 <tbody>
                     {movieItems}
