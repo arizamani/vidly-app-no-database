@@ -1,17 +1,22 @@
 
-import React, {useState,useEffect} from 'react';
+import React, {useState} from 'react';
 import * as db from '../services/fakeMovieService';
+import Like from './common/like';
 
 export default function Table(){
     const movies = db.getMovies();
     const [items, setItems] = useState(movies);
     const [count, setCounter] = useState(movies.length);
+
     const movieItems = items.map( item => 
     <tr key={item._id}>
         <td>{item.title}</td>
         <td>{item.genre.name}</td>
         <td>{item.numberInStock}</td>
         <td>{item.dailyRentalRate}</td>
+        <td>
+            <Like isTrue={false} />
+        </td>
         <td><button className='btn btn-danger rounded-pill' onClick={() => removeItem(item._id) }>Delete</button></td>
     </tr>
     );
@@ -21,7 +26,17 @@ export default function Table(){
         setCounter(c => c-=1);
     };
 
-    let refactorTableHeader = <tr><th>Title</th><th>Genre</th><th>Stock</th><th>Rate</th></tr>;
+
+
+    let refactorTableHeader = <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Stock</th>
+            <th>Rate</th>
+            <th></th>
+            <th></th>
+        </tr>;
+      
     const refactorTitle = () => {
         if (count === undefined || count === 0 ) {
             refactorTableHeader = null;
