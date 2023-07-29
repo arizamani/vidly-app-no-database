@@ -8,6 +8,13 @@ export default function Table(){
     const [items, setItems] = useState(movies);
     const [count, setCounter] = useState(movies.length);
 
+    const likeMovie =(id) =>{
+        let newList = [...items];
+        let index = items.findIndex(item => item._id === id);
+        newList[index].isLiked = !newList[index].isLiked;
+        setItems(newList); 
+    }
+
     const movieItems = items.map( item => 
     <tr key={item._id}>
         <td>{item.title}</td>
@@ -15,7 +22,7 @@ export default function Table(){
         <td>{item.numberInStock}</td>
         <td>{item.dailyRentalRate}</td>
         <td>
-            <Like isTrue={false} />
+            <Like isLiked={item.isLiked} id={item._id} likeFunction={likeMovie}/>
         </td>
         <td><button className='btn btn-danger rounded-pill' onClick={() => removeItem(item._id) }>Delete</button></td>
     </tr>
@@ -25,7 +32,6 @@ export default function Table(){
         setItems( array => array.filter( item => item._id !== id));       
         setCounter(c => c-=1);
     };
-
 
 
     let refactorTableHeader = <tr>
