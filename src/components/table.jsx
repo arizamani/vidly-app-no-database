@@ -1,13 +1,13 @@
 
 import React, {useState} from 'react';
 import Like from './common/like';
+import SortButton from './common/sortButton';
 
-export default function Table({moviesCollection,_likeMovie,_removeItem,_newSeries}){
-
+export default function Table({titles,emptyTitles,moviesCollection,_likeMovie,_removeItem,_newSeries,changeSort,activeColumn}){
     const movieItems = _newSeries.map( item => 
         <tr key={item._id}>
             <td>{item.title}</td>
-            <td>{item.genre.name}</td>
+            <td>{item.genre}</td>
             <td>{item.numberInStock}</td>
             <td>{item.dailyRentalRate}</td>
             <td>
@@ -17,14 +17,18 @@ export default function Table({moviesCollection,_likeMovie,_removeItem,_newSerie
         </tr>
     );
 
+    let emptyTitlesColumns = (a) => {
+        let array = [];
+        for (let i=0; i< a; i++ ){
+            array.push(<th key={i}></th>);
+        }
+        return array;
+    }
+
     let refactorTableHeader = <tr>
-            <th><button type="button" class="btn">Title</button></th>
-            <th><button type="button" class="btn">Genre</button></th>
-            <th><button type="button" class="btn">Stock</button></th>
-            <th><button type="button" class="btn">Rate</button></th>
-            <th></th>
-            <th></th>
-        </tr>;
+        {titles.map(m => <th key={m}><SortButton title={m} _onClick={changeSort} _activeColumn={activeColumn}/></th>)}
+        {emptyTitlesColumns(emptyTitles)}
+    </tr>;
       
     const refactorTitle = () => {
         if (moviesCollection.length === undefined || moviesCollection .length=== 0 ) {
@@ -38,7 +42,7 @@ export default function Table({moviesCollection,_likeMovie,_removeItem,_newSerie
     return (
         <>
             <h1>{refactorTitle()}</h1>
-            <div class="table-responsive-sm">
+            <div className="table-responsive-sm">
             <table className="table mt-4">
                 <thead className='border-bottom'>
                     {refactorTableHeader}

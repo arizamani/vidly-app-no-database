@@ -5,21 +5,27 @@ import Pagination from './components/common/pagination';
 import FilterBox from './components/common/filterBox';
 import * as db from './services/fakeMovieService';
 import * as Genres from './services/fakeGenreService';
+import _ from 'lodash';
 
 function App() {
   const genresObj = Genres.getGenres();
   const genresArray = genresObj.map(item => item.name);
   genresArray.unshift('All Genres');
-  //console.log(genresArray);
 
-  const movies = db.getMovies();
+  const moviesRaw = db.getMovies();
+  const movies = moviesRaw.map(m => {
+    return {...m, genre: m.genre.name}
+  }); 
   const listPerPage = 4;
   const totalPages = (m) => Math.floor(m.length/listPerPage) + (m.length/listPerPage && m.length % listPerPage > 0 ? 1 : 0);
+  const tableTitles = ['Title','Genre','Stock','Rate'];
+  const tableTitlesEmptyColumns = 2;
 
   //Movie states
   const [items, setItems] = useState(movies);
   const [pagesNumber, setPagesNumber] = useState(totalPages(movies));
   const [activePage, setActivePage] = useState(0);
+  const [column, setColumn] = useState({title:'title', order:'asc'});
   //Genres states
   const [activeGenresIndex, setActiveGenresIndex] = useState(0);
   const [filterItems, setFilterItems] = useState(movies);
@@ -43,38 +49,65 @@ function App() {
     setPagesNumber(totalPages(newList));
   };
 
+  const sortItem = (col) => {
+    setColumn(col);
+  }
+
   const genresList = (index) => {
     setItems(filterItems);
     setActiveGenresIndex(index);
     let activeGenres = genresArray[index];
     if(index !==0){
-      let preItems = filterItems.filter(item => item.genre.name === activeGenres);
+      let preItems = filterItems.filter(item => item.genre === activeGenres);
       setPagesNumber(totalPages(preItems));
       setItems(preItems);
     }else{
       setPagesNumber(totalPages(filterItems));
     }
-
   }
 
   //Function
   const newSeries = (a) => {
+    let sorted=[];
+    if (column.order === 'asc'){
+      sorted = _.sortBy(a,column.title);
+    }else{
+      sorted = _.sortBy(a,column.title);
+      sorted.reverse();
+    }
     let first = listPerPage*activePage;
     let last = listPerPage*(activePage+1);
-    let modifiedSeires = a.slice(first,last);
+    let modifiedSeires = sorted.slice(first,last);
     if (modifiedSeires.length < 1 && activePage !== 0) setActivePage(activePage - 1);
-    return a.slice(first,last);
+    return sorted.slice(first,last);
   }
 
   return ( 
     <main className="container-sm mt-4">
       <div className='row'>
         <div className='col-lg-2'>
-          <FilterBox listItems={genresArray} activeGenres={activeGenresIndex} _onClick={genresList}/>
+          <FilterBox 
+            listItems={genresArray} 
+            activeGenres={activeGenresIndex} 
+            _onClick={genresList}
+          />
         </div>
         <div className='col'>
-          <Table moviesCollection={items} _likeMovie={likeMovie} _removeItem={removeItem} _newSeries={newSeries(items)}/>
-          <Pagination _pagesNumber={pagesNumber} _onClick={moviesSeries} _activePage={activePage}/>
+          <Table
+            titles={tableTitles} 
+            emptyTitles={2}
+            moviesCollection={items} 
+            _likeMovie={likeMovie} 
+            _removeItem={removeItem} 
+            _newSeries={newSeries(items)} 
+            changeSort={sortItem}
+            activeColumn={column.title} 
+          />
+          <Pagination 
+            _pagesNumber={pagesNumber} 
+            _onClick={moviesSeries} 
+            _activePage={activePage}
+          />
         </div>
       </div>
     </main>
