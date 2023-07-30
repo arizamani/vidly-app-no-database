@@ -1,5 +1,5 @@
 
-import React,{useState,useMemo} from 'react';
+import React,{useState} from 'react';
 import Table from './components/table';
 import Pagination from './components/common/pagination';
 import FilterBox from './components/common/filterBox';
@@ -20,6 +20,11 @@ function App() {
   const totalPages = (m) => Math.floor(m.length/listPerPage) + (m.length/listPerPage && m.length % listPerPage > 0 ? 1 : 0);
   const tableTitles = ['Title','Genre','Stock','Rate'];
   const tableTitlesEmptyColumns = 2;
+  const tableSpecification = {
+    listPerPage,
+    tableTitles,
+    tableTitlesEmptyColumns
+  }
 
   //Movie states
   const [items, setItems] = useState(movies);
@@ -94,8 +99,7 @@ function App() {
         </div>
         <div className='col'>
           <Table
-            titles={tableTitles} 
-            emptyTitles={2}
+            tableFeed={tableSpecification}
             moviesCollection={items} 
             _likeMovie={likeMovie} 
             _removeItem={removeItem} 

@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import Like from './common/like';
 import SortButton from './common/sortButton';
 
-export default function Table({titles,emptyTitles,moviesCollection,_likeMovie,_removeItem,_newSeries,changeSort,activeColumn}){
+export default function Table({tableFeed,moviesCollection,_likeMovie,_removeItem,_newSeries,changeSort,activeColumn}){
     const movieItems = _newSeries.map( item => 
         <tr key={item._id}>
             <td>{item.title}</td>
@@ -26,8 +26,8 @@ export default function Table({titles,emptyTitles,moviesCollection,_likeMovie,_r
     }
 
     let refactorTableHeader = <tr>
-        {titles.map(m => <th key={m}><SortButton title={m} _onClick={changeSort} _activeColumn={activeColumn}/></th>)}
-        {emptyTitlesColumns(emptyTitles)}
+        {tableFeed.tableTitles.map(m => <th key={m}><SortButton title={m} _onClick={changeSort} _activeColumn={activeColumn}/></th>)}
+        {emptyTitlesColumns(tableFeed.tableTitlesEmptyColumns)}
     </tr>;
       
     const refactorTitle = () => {
