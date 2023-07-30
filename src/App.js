@@ -1,18 +1,30 @@
 
-import React,{useState,useEffect} from 'react';
+import React,{useState,useMemo} from 'react';
 import Table from './components/table';
-import Pagination from './components/common/pagination'
+import Pagination from './components/common/pagination';
+import FilterBox from './components/common/filterBox';
 import * as db from './services/fakeMovieService';
+import * as Genres from './services/fakeGenreService';
 
 function App() {
+  const genresObj = Genres.getGenres();
+  const genresArray = genresObj.map(item => item.name);
+  genresArray.unshift('All Genres');
+  //console.log(genresArray);
+
   const movies = db.getMovies();
-  const listPerPage = 2;
+  const listPerPage = 4;
   const totalPages = (m) => Math.floor(m.length/listPerPage) + (m.length/listPerPage && m.length % listPerPage > 0 ? 1 : 0);
 
+  //Movie states
   const [items, setItems] = useState(movies);
-  const [pagesNumber, setPages] = useState(totalPages(movies));
+  const [pagesNumber, setPagesNumber] = useState(totalPages(movies));
   const [activePage, setActivePage] = useState(0);
+  //Genres states
+  const [activeGenresIndex, setActiveGenresIndex] = useState(0);
+  const [filterItems, setFilterItems] = useState(movies);
 
+  //Event Handler
   const moviesSeries = (seire) => {
     setActivePage(seire);
   }
@@ -27,23 +39,41 @@ function App() {
   const removeItem = (id) => {
     let newList = items.filter( item => item._id !== id);
     setItems(newList);
-    setPages(totalPages(newList));
+    setFilterItems(filterItems => filterItems.filter( item => item._id !== id));
+    setPagesNumber(totalPages(newList));
   };
 
-  const newSeries = () => {
+  const genresList = (index) => {
+    setItems(filterItems);
+    setActiveGenresIndex(index);
+    let activeGenres = genresArray[index];
+    if(index !==0){
+      let preItems = filterItems.filter(item => item.genre.name === activeGenres);
+      setPagesNumber(totalPages(preItems));
+      setItems(preItems);
+    }else{
+      setPagesNumber(totalPages(filterItems));
+    }
+
+  }
+
+  //Function
+  const newSeries = (a) => {
     let first = listPerPage*activePage;
     let last = listPerPage*(activePage+1);
-    let modifiedSeires = items.slice(first,last);
+    let modifiedSeires = a.slice(first,last);
     if (modifiedSeires.length < 1 && activePage !== 0) setActivePage(activePage - 1);
-    return items.slice(first,last);
+    return a.slice(first,last);
   }
 
   return ( 
-    <main className="container mt-4">
+    <main className="container-sm mt-4">
       <div className='row'>
-        <div className='col-2'></div>
+        <div className='col-lg-2'>
+          <FilterBox listItems={genresArray} activeGenres={activeGenresIndex} _onClick={genresList}/>
+        </div>
         <div className='col'>
-          <Table moviesCollection={items} _likeMovie={likeMovie} _removeItem={removeItem} _newSeries={newSeries()}/>
+          <Table moviesCollection={items} _likeMovie={likeMovie} _removeItem={removeItem} _newSeries={newSeries(items)}/>
           <Pagination _pagesNumber={pagesNumber} _onClick={moviesSeries} _activePage={activePage}/>
         </div>
       </div>

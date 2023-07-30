@@ -18,10 +18,10 @@ export default function Table({moviesCollection,_likeMovie,_removeItem,_newSerie
     );
 
     let refactorTableHeader = <tr>
-            <th>Title</th>
-            <th>Genre</th>
-            <th>Stock</th>
-            <th>Rate</th>
+            <th><button type="button" class="btn">Title</button></th>
+            <th><button type="button" class="btn">Genre</button></th>
+            <th><button type="button" class="btn">Stock</button></th>
+            <th><button type="button" class="btn">Rate</button></th>
             <th></th>
             <th></th>
         </tr>;
@@ -38,6 +38,7 @@ export default function Table({moviesCollection,_likeMovie,_removeItem,_newSerie
     return (
         <>
             <h1>{refactorTitle()}</h1>
+            <div class="table-responsive-sm">
             <table className="table mt-4">
                 <thead className='border-bottom'>
                     {refactorTableHeader}
@@ -46,6 +47,7 @@ export default function Table({moviesCollection,_likeMovie,_removeItem,_newSerie
                     {movieItems}
                 </tbody>
             </table>
+            </div>
         </>
     );
 }
