@@ -2,16 +2,37 @@
 import React, {useState} from 'react';
 import Like from './common/like';
 import SortButton from './common/sortButton';
+import _ from 'lodash';
 
-export default function Table({tableFeed,moviesCollection,_likeMovie,_removeItem,_newSeries,changeSort,activeColumn}){
-    const movieItems = _newSeries.map( item => 
+export default function Table({_tableFeed,_collection,_likeItem,_removeItem,_activePage,_activeListItem}){
+
+    const [column, setColumn] = useState({title:'title', order:'asc'});
+    
+    const sortItem = (col) => {
+        setColumn(col);
+      }
+
+    const _newSeries = (a) => {
+        let sorted=[];
+        if (column.order === 'asc'){
+          sorted = _.sortBy(a,column.title);
+        }else{
+          sorted = _.sortBy(a,column.title);
+          sorted.reverse();
+        }
+        let first = _tableFeed.listPerPage*_activePage;
+        let last = _tableFeed.listPerPage*(_activePage+1);
+        return sorted.slice(first,last);
+    }
+
+    const movieItems = _newSeries(_collection).map( item => 
         <tr key={item._id}>
             <td>{item.title}</td>
             <td>{item.genre}</td>
             <td>{item.numberInStock}</td>
             <td>{item.dailyRentalRate}</td>
             <td>
-                <Like isLiked={item.isLiked} id={item._id} __likeMovie={_likeMovie}/>
+                <Like isLiked={item.isLiked} id={item._id} __likeMovie={_likeItem}/>
             </td>
             <td><button className='btn btn-danger rounded-pill' onClick={() => _removeItem(item._id) }>Delete</button></td>
         </tr>
@@ -26,16 +47,17 @@ export default function Table({tableFeed,moviesCollection,_likeMovie,_removeItem
     }
 
     let refactorTableHeader = <tr>
-        {tableFeed.tableTitles.map(m => <th key={m}><SortButton title={m} _onClick={changeSort} _activeColumn={activeColumn}/></th>)}
-        {emptyTitlesColumns(tableFeed.tableTitlesEmptyColumns)}
+        {_tableFeed.tableTitles.map(m => <th key={m}><SortButton title={m} _onClick={sortItem} _activeColumn={column.title}/></th>)}
+        {emptyTitlesColumns(_tableFeed.tableTitlesEmptyColumns)}
     </tr>;
       
     const refactorTitle = () => {
-        if (moviesCollection.length === undefined || moviesCollection .length=== 0 ) {
+        if (_collection.length === undefined || _collection.length=== 0 ) {
             refactorTableHeader = null;
-            return 'There are no movies in the databse.';
+            if (_activeListItem === 'All Genres') return `There are no movies in any genre.`;
+            return `There are no movies in ${_activeListItem.toLowerCase()}.`;
         }else{
-            return `Showing ${moviesCollection.length} movies in the database.`;
+            return `Showing ${_collection.length} movies in ${_activeListItem.toLowerCase()}.`;
         }   
     };
 

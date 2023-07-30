@@ -7,7 +7,7 @@ import * as db from './services/fakeMovieService';
 import * as Genres from './services/fakeGenreService';
 import _ from 'lodash';
 
-function App() {
+export default function App() {
   const genresObj = Genres.getGenres();
   const genresArray = genresObj.map(item => item.name);
   genresArray.unshift('All Genres');
@@ -30,16 +30,34 @@ function App() {
   const [items, setItems] = useState(movies);
   const [pagesNumber, setPagesNumber] = useState(totalPages(movies));
   const [activePage, setActivePage] = useState(0);
-  const [column, setColumn] = useState({title:'title', order:'asc'});
+
   //Genres states
   const [activeGenresIndex, setActiveGenresIndex] = useState(0);
   const [filterItems, setFilterItems] = useState(movies);
 
-  //Event Handler
-  const moviesSeries = (seire) => {
-    setActivePage(seire);
+  /* 
+  *  Filter Component - Event Handler
+  */
+  const genresList = (index) => {
+    setItems(filterItems);
+    setActiveGenresIndex(index);
+    let activeGenres = genresArray[index];
+    //console.log(activeGenres)
+    if(index !==0){
+      let preItems = filterItems.filter(item => item.genre === activeGenres);
+      setPagesNumber(totalPages(preItems));
+      setItems(preItems);
+    }else{
+      setPagesNumber(totalPages(filterItems));
+    }
+    setActivePage(0);
   }
-  
+
+  /* 
+  *  Table Component - Event Handler
+  *  sice it's related to Databse, the Event handler should be in
+  *  App component not incapsulated in Table component itself
+  */
   const likeMovie =(id) =>{
     let newList = [...items];
     let index = items.findIndex(item => item._id === id);
@@ -49,42 +67,20 @@ function App() {
 
   const removeItem = (id) => {
     let newList = items.filter( item => item._id !== id);
+    if (newList.length % listPerPage === 0 && activePage !== 0) {
+      let updateLastPageIndex = newList.length / listPerPage;
+      setActivePage(updateLastPageIndex-1);
+    }
     setItems(newList);
     setFilterItems(filterItems => filterItems.filter( item => item._id !== id));
     setPagesNumber(totalPages(newList));
   };
 
-  const sortItem = (col) => {
-    setColumn(col);
-  }
-
-  const genresList = (index) => {
-    setItems(filterItems);
-    setActiveGenresIndex(index);
-    let activeGenres = genresArray[index];
-    if(index !==0){
-      let preItems = filterItems.filter(item => item.genre === activeGenres);
-      setPagesNumber(totalPages(preItems));
-      setItems(preItems);
-    }else{
-      setPagesNumber(totalPages(filterItems));
-    }
-  }
-
-  //Function
-  const newSeries = (a) => {
-    let sorted=[];
-    if (column.order === 'asc'){
-      sorted = _.sortBy(a,column.title);
-    }else{
-      sorted = _.sortBy(a,column.title);
-      sorted.reverse();
-    }
-    let first = listPerPage*activePage;
-    let last = listPerPage*(activePage+1);
-    let modifiedSeires = sorted.slice(first,last);
-    if (modifiedSeires.length < 1 && activePage !== 0) setActivePage(activePage - 1);
-    return sorted.slice(first,last);
+  /* 
+  *  Pagination Component - Event Handler
+  */
+  const moviesSeries = (seire) => {
+    setActivePage(seire)
   }
 
   return ( 
@@ -92,20 +88,19 @@ function App() {
       <div className='row'>
         <div className='col-lg-2'>
           <FilterBox 
-            listItems={genresArray} 
-            activeGenres={activeGenresIndex} 
+            _listItems={genresArray} 
+            _activeItems={activeGenresIndex} 
             _onClick={genresList}
           />
         </div>
         <div className='col'>
           <Table
-            tableFeed={tableSpecification}
-            moviesCollection={items} 
-            _likeMovie={likeMovie} 
+            _tableFeed={tableSpecification}
+            _collection={items} 
+            _likeItem={likeMovie} 
             _removeItem={removeItem} 
-            _newSeries={newSeries(items)} 
-            changeSort={sortItem}
-            activeColumn={column.title} 
+            _activePage={activePage}
+            _activeListItem={genresArray[activeGenresIndex]}
           />
           <Pagination 
             _pagesNumber={pagesNumber} 
@@ -118,4 +113,3 @@ function App() {
   );
 }
 
-export default App;
