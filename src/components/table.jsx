@@ -4,6 +4,7 @@ import Like from './common/like';
 import SortButton from './common/sortButton';
 import _ from 'lodash';
 
+
 export default function Table({_tableFeed,_collection,_likeItem,_removeItem,_activePage,_activeListItem}){
 
     const [column, setColumn] = useState({title:'title', order:'asc'});
@@ -63,7 +64,7 @@ export default function Table({_tableFeed,_collection,_likeItem,_removeItem,_act
 
     return (
         <>
-            <h1>{refactorTitle()}</h1>
+            <h1 className='cursor-pointer text-color-red'>{refactorTitle()}</h1>
             <div className="table-responsive-sm">
             <table className="table mt-4">
                 <thead className='border-bottom'>

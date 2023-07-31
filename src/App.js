@@ -1,5 +1,6 @@
 
 import React,{useState} from 'react';
+import Header from './components/common/header';
 import Table from './components/table';
 import Pagination from './components/common/pagination';
 import FilterBox from './components/common/filterBox';
@@ -83,33 +84,37 @@ export default function App() {
     setActivePage(seire)
   }
 
-  return ( 
-    <main className="container-sm mt-4">
-      <div className='row'>
-        <div className='col-lg-2'>
-          <FilterBox 
-            _listItems={genresArray} 
-            _activeItems={activeGenresIndex} 
-            _onClick={genresList}
-          />
+  return (
+    <>
+      <Header/>
+      <main className="container-sm mt-4">
+        <div className='row'>
+          <div className='col-lg-2'>
+            <FilterBox 
+              _listItems={genresArray} 
+              _activeItems={activeGenresIndex} 
+              _onClick={genresList}
+            />
+          </div>
+          <div className='col'>
+            <Table
+              _tableFeed={tableSpecification}
+              _collection={items} 
+              _likeItem={likeMovie} 
+              _removeItem={removeItem} 
+              _activePage={activePage}
+              _activeListItem={genresArray[activeGenresIndex]}
+            />
+            <Pagination 
+              _pagesNumber={pagesNumber} 
+              _onClick={moviesSeries} 
+              _activePage={activePage}
+            />
+          </div>
         </div>
-        <div className='col'>
-          <Table
-            _tableFeed={tableSpecification}
-            _collection={items} 
-            _likeItem={likeMovie} 
-            _removeItem={removeItem} 
-            _activePage={activePage}
-            _activeListItem={genresArray[activeGenresIndex]}
-          />
-          <Pagination 
-            _pagesNumber={pagesNumber} 
-            _onClick={moviesSeries} 
-            _activePage={activePage}
-          />
-        </div>
-      </div>
-    </main>
+      </main>
+    </> 
+
   );
 }
 
