@@ -7,10 +7,10 @@ import _ from 'lodash';
 export default function Table({_tableFeed,_collection,_likeItem,_removeItem,_activePage,_activeListItem}){
 
     const [column, setColumn] = useState({title:'title', order:'asc'});
-    
+
     const sortItem = (col) => {
         setColumn(col);
-      }
+    }
 
     const _newSeries = (a) => {
         let sorted=[];
