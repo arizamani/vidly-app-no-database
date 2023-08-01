@@ -13,6 +13,12 @@ export default function Header(){
                     <li className="nav-item">
                         <NavLink className="nav-link" to="/movies">Movies</NavLink>
                     </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/products">Products</NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/post">Post</NavLink>
+                    </li>
                 </ul>
             </div>
         </nav>
