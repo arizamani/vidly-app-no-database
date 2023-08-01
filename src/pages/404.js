@@ -2,12 +2,13 @@
 import React from 'react';
 
 
-export default function Home({name}){
+export default function NoPage(){
     
     return (
         <main className="container-sm mt-4">
             <div className='row'>
-                <h1>Home: Welcome {name}</h1>
+                <h1>404</h1>
+                <p>The page not Foumd</p>
             </div>
         </main>
     );

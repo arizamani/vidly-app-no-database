@@ -31,24 +31,18 @@ $utilities: map-merge(
       map-get($utilities, "color"),
       (
         values: map-merge(
-          map-get(map-get($utilities, "color"), "values"),
-          (
-            $all-colors
-          ),
-        ),
-      ),
+          map-get(map-get($utilities, "color"), "values"),$all-colors
+        )
+      )
     ),
 
     "background-color": map-merge(
       map-get($utilities, "background-color"),
       (
         values: map-merge(
-          map-get(map-get($utilities, "color"), "values"),
-          (
-            $all-colors
-          ),
-        ),
-      ),
+          map-get(map-get($utilities, "color"), "values"),$all-colors
+        )
+      )
     )
   )
 );

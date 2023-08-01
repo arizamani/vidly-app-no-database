@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink} from "react-router-dom";
 
 export default function Header(){
 
@@ -7,10 +8,10 @@ export default function Header(){
             <div className="container">
                 <ul className="navbar-nav">
                     <li className="nav-item">
-                        <a className="nav-link" href="/">Home</a>
+                        <NavLink className="nav-link" to="/">Home</NavLink>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="/movies">Movies</a>
+                        <NavLink className="nav-link" to="/movies">Movies</NavLink>
                     </li>
                 </ul>
             </div>
