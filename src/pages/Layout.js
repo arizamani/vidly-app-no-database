@@ -16,6 +16,7 @@ export default function Layout(){
                 {Post: "/post"},
                 {Product: "/products"},
                 {Admin: "/admin/post"},
+                {Account: "/account/login"}
             ]}/>
             <Outlet />
             <Footer additionalClassName={"mt-auto mb-0"}/>
