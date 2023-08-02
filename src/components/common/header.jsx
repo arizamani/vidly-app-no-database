@@ -1,10 +1,12 @@
 import React from 'react';
 import { NavLink} from "react-router-dom";
 
-export default function Header(){
+export default function Header({additionalClassName}){
+    let classes = "navbar navbar-expand-sm bg-light ";
+    classes+= additionalClassName ? additionalClassName : '';
 
     return(
-        <nav className="navbar navbar-expand-sm bg-light">
+        <header className={classes}>
             <div className="container">
                 <ul className="navbar-nav">
                     <li className="nav-item">
@@ -19,9 +21,12 @@ export default function Header(){
                     <li className="nav-item">
                         <NavLink className="nav-link" to="/post">Post</NavLink>
                     </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/admin/post">Admin</NavLink>
+                    </li>
                 </ul>
             </div>
-        </nav>
+        </header>
     );
 
 }

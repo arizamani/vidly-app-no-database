@@ -1,9 +1,10 @@
 import React from 'react';
 
-export default function Footer(){
-
+export default function Footer({additionalClassName}){
+    let classes = "container-fluid bg-light ";
+    classes+= additionalClassName ? additionalClassName : '';
     return(
-        <div className="container-fluid bg-light">
+        <footer className={classes}>
             <div className="container">
                 <footer className="py-3">
                     <ul className="nav justify-content-center border-bottom pb-3 mb-3">
@@ -16,7 +17,7 @@ export default function Footer(){
                     <p className="text-center text-muted">© 2021 Company, Inc</p>
                 </footer>
             </div>
-        </div>
+        </footer>
     );
 
 }

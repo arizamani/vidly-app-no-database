@@ -43,7 +43,18 @@ $utilities: map-merge(
           map-get(map-get($utilities, "color"), "values"),$all-colors
         )
       )
-    )
+    ),
+
+    "min-height": (
+      property: min-height,
+      class: hmin,
+      values: 
+      (
+        0: 0,
+        100: 100vh
+      )
+    ),
+
   )
 );
 
