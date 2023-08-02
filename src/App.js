@@ -2,11 +2,12 @@
 import React,{ lazy, Suspense } from 'react';
 import { Routes, Route } from "react-router-dom";
 import _ from 'lodash';
-const Layout = lazy(() => import('./pages/Layout'));
-const Movies = lazy(() => import('./pages/Movies'));
-const Home = lazy(() => import('./pages/Home'));
-const Products = lazy(() => import('./pages/Products'));
-const ProductDetails = lazy(() => import('./pages/ProductDetails'));
+const Layout = lazy(() => import('./pages/layout'));
+const Movies = lazy(() => import('./pages/movies'));
+const DetailMovies = lazy(() => import('./pages/movieDetails'));
+const Home = lazy(() => import('./pages/home'));
+const Products = lazy(() => import('./pages/products'));
+const ProductDetails = lazy(() => import('./pages/productDetails'));
 const NoPage = lazy(() => import('./pages/404'));
 const Post = lazy(() => import('./pages/post'));
 const Admin = lazy(() => import('./pages/admin'));
@@ -22,6 +23,7 @@ export default function App() {
             <Route path='/' element={<Layout />}>
               <Route index element={<Home name={"Arash"}/>} />
               <Route path='movies' element={<Movies />} />
+              <Route path='movies/:id' element={<DetailMovies/>} />
               <Route path='products' element={<Products />} />
               <Route path='products/:id' element={<ProductDetails allowableId={productsArray}/>} />
               <Route path='post' element={<Post />} />
@@ -35,4 +37,3 @@ export default function App() {
         </Suspense>
   );
 }
-

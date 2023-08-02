@@ -8,7 +8,15 @@ export default function Layout(){
     
     return (
         <div className='content d-flex flex-column hmin-100'>
-            <Header additionalClassName={""}/>
+            <Header additionalClassName={""} menus={[
+                {Home: "/"},
+                {Movies: "/movies"},
+                {Customers: "/customers"},
+                {Rental: "/rentals"},
+                {Post: "/post"},
+                {Product: "/products"},
+                {Admin: "/admin/post"},
+            ]}/>
             <Outlet />
             <Footer additionalClassName={"mt-auto mb-0"}/>
         </div>

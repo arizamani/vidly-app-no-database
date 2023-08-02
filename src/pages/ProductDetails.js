@@ -18,7 +18,7 @@ export default function ProductDetails({allowableId}){
         <main className="container-sm mt-4">
             <div className='row'>
                 <h1>Product {params.id}</h1>
-                <button className='btn btn-success rounded-pill' onClick={() => navigate('/',{replace:true}) }>Submit!</button>
+                <button className='btn btn-success rounded-pill' style={{ maxWidth: "120px"}} onClick={() => navigate('/',{replace:true}) }>Submit!</button>
             </div>
         </main>
     );

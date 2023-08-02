@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import Like from './common/like';
 import SortButton from './common/sortButton';
 import _ from 'lodash';
+import { NavLink } from 'react-router-dom';
 
 
 export default function Table({_tableFeed,_collection,_likeItem,_removeItem,_activePage,_activeListItem}){
@@ -28,7 +29,9 @@ export default function Table({_tableFeed,_collection,_likeItem,_removeItem,_act
 
     const movieItems = _newSeries(_collection).map( item => 
         <tr key={item._id}>
-            <td>{item.title}</td>
+            <td>
+                <NavLink className="nav-link" to={`./${item._id}`}>{item.title}</NavLink>
+            </td>
             <td>{item.genre}</td>
             <td>{item.numberInStock}</td>
             <td>{item.dailyRentalRate}</td>
