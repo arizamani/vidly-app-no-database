@@ -4,7 +4,7 @@ import Input from "./common/input";
 
 export default function RegisterForm(){
 
-    const [user,setUser] = useState({email:'', pass:'',remember:false});
+    const [user,setUser] = useState({email:'', pass:'',name:'',remember:false});
     const [errors,setErrors] = useState({path:'', message:''});
 
     const submit =(e) => {
@@ -47,22 +47,14 @@ export default function RegisterForm(){
         }else{
             setErrors({path:'', message:''});
         }
+        
     }
 
-    const changeCheckBox = (name) => {
-        return (e) => {
-            setUser({ ...user, [name]: e.target.checked });
-        };
-    };
 
     return (
         <form onSubmit={submit} noValidate>
-{/*             <div className="mb-3 mt-3">
-                <label htmlFor="log-email" className="form-label">Email:</label>
-                <input type="email" className="form-control" id="log-email" placeholder="Enter email" name="email" onChange={changeInputText('email')} value={user.email}/>
-                {errors.path === 'email' && <div className="alert alert-danger rounded-0">{errors.message}</div>}
-            </div> */}
             <Input name={'email'} prefix={"reg"} label={"Email"} errors={errors} onChange={changeInputText('email')} value={user.email} />
+            <Input name={'name'} prefix={"reg"} label={"Name"} errors={errors} onChange={changeInputText('name')} value={user.name} />
             <Input name={'pass'} prefix={"reg"} label={"Password"} errors={errors} onChange={changeInputText('pass')} value={user.pass} type={'password'} autoComplete="on"/>
             <button type="submit" className="btn btn-primary" disabled={submitState()}>Submit</button>
         </form>
@@ -73,6 +65,7 @@ export default function RegisterForm(){
 function validateUser(user,allErrors=false){
     const schema = Joi.object({
         email: Joi.string().email({ tlds: { allow: false } }).required().label('Email'),
+        name: Joi.string().allow(''),
         pass: Joi.string().min(6).max(255).required().label('Password')
         .ruleset.pattern(/^[^\\/\^:;=\<>+*]+$/)
         .message("for password field the Characters: [ ^, /, \\, :, ;, <, >, =, +, * ] is not valid!")

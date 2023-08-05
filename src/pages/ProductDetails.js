@@ -11,7 +11,7 @@ export default function ProductDetails({allowableId}){
     //console.log(_.includes(allowableId,id));
     //console.log(typeof id);
     useEffect(() => {
-        if(!_.includes(allowableId,parseInt(params.id))) navigate('./not-found',);
+        if(!_.includes(allowableId,parseInt(params.id))) navigate('./not-found');
     }); 
    
     return (

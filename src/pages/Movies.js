@@ -1,23 +1,44 @@
 
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
+import { NavLink,useLocation } from 'react-router-dom';
 import Table from '../components/table';
 import Pagination from '../components/common/pagination';
 import FilterBox from '../components/common/filterBox';
 import * as db from '../services/fakeMovieService';
 import * as Genres from '../services/fakeGenreService';
 import _ from 'lodash';
+import SearchBox from '../components/common/searchBox';
 
 
 export default function Movies() {
-  const genresObj = Genres.getGenres();
+/*   const genresObj = Genres.getGenres();
   const genresArray = genresObj.map(item => item.name);
+  genresArray.unshift('All Genres'); */
+  let moviesRaw,movies,genresObj,genresArray
+  const listPerPage = 4;
+  const location = useLocation();
+
+  moviesRaw = db.getMovies();
+  movies = moviesRaw.map(m => {
+    return {...m, genre: m.genre.name}
+  });
+
+  if (location.state){
+    let index = _.findIndex(movies, ['title', location.state.title]);
+    if(index>=0){
+      location.state._id = movies[index]._id;
+      movies[index] = location.state;
+    }else{
+      location.state._id = '1234a';
+      movies.push(location.state);
+    }
+
+  }
+
+  genresObj = Genres.getGenres();
+  genresArray = genresObj.map(item => item.name);
   genresArray.unshift('All Genres');
 
-  const moviesRaw = db.getMovies();
-  const movies = moviesRaw.map(m => {
-    return {...m, genre: m.genre.name}
-  }); 
-  const listPerPage = 4;
   const totalPages = (m) => Math.floor(m.length/listPerPage) + (m.length/listPerPage && m.length % listPerPage > 0 ? 1 : 0);
   const tableTitles = ['Title','Genre','Stock','Rate'];
   const tableTitlesEmptyColumns = 2;
@@ -26,6 +47,13 @@ export default function Movies() {
     tableTitles,
     tableTitlesEmptyColumns
   }
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", (e) => {
+      delete e.returnValue;
+      window.history.replaceState({}, document.title);
+    });
+  }, []);
 
   //Movie states
   const [items, setItems] = useState(movies);
@@ -36,6 +64,12 @@ export default function Movies() {
   const [activeGenresIndex, setActiveGenresIndex] = useState(0);
   const [filterItems, setFilterItems] = useState(movies);
 
+  //Filter state 
+  const [disableFilte, setDisableFilter] = useState(false);
+
+  //Search states 
+  const [searchBox, setSearchBox] = useState('');
+
   /* 
   *  Filter Component - Event Handler
   */
@@ -43,7 +77,6 @@ export default function Movies() {
     setItems(filterItems);
     setActiveGenresIndex(index);
     let activeGenres = genresArray[index];
-    //console.log(activeGenres)
     if(index !==0){
       let preItems = filterItems.filter(item => item.genre === activeGenres);
       setPagesNumber(totalPages(preItems));
@@ -52,6 +85,26 @@ export default function Movies() {
       setPagesNumber(totalPages(filterItems));
     }
     setActivePage(0);
+    setSearchBox('');
+  }
+
+  /* 
+  *  SearchBox Component - Event Handler
+  */
+  const search = (e) => {
+    let startWith = e.target.value;
+    const regex = new RegExp(`^(${startWith}).*$`, "gi");
+    let newList = movies.filter(i => i.title.match(regex));
+
+    setItems(newList);
+    setSearchBox(e.target.value);
+    setPagesNumber(totalPages(newList));
+    setActiveGenresIndex(0);
+    if (startWith === ''){
+      setDisableFilter(false);
+    }else{
+      setDisableFilter(true);
+    }
   }
 
   /* 
@@ -92,9 +145,12 @@ export default function Movies() {
             _listItems={genresArray} 
             _activeItems={activeGenresIndex} 
             _onClick={genresList}
+            _disable={disableFilte}
             />
         </div>
         <div className='col'>
+            <NavLink className="btn btn-primary mb-3" to={'./new'}>New Movie</NavLink>
+            <SearchBox _onChange={search} _value={searchBox}/>
             <Table
             _tableFeed={tableSpecification}
             _collection={items} 

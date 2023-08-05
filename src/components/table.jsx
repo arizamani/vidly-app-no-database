@@ -30,7 +30,8 @@ export default function Table({_tableFeed,_collection,_likeItem,_removeItem,_act
     const movieItems = _newSeries(_collection).map( item => 
         <tr key={item._id}>
             <td>
-                <NavLink className="nav-link" to={`./${item._id}`}>{item.title}</NavLink>
+                <NavLink className="nav-link" to={`./${item._id}?title=${item.title}&&genre=${item.genre}&&stock=${item.numberInStock}&&rate=${item.dailyRentalRate}`}
+                >{item.title}</NavLink>
             </td>
             <td>{item.genre}</td>
             <td>{item.numberInStock}</td>
