@@ -48,9 +48,11 @@ export default function Movies() {
     tableTitlesEmptyColumns
   }
 
+  /*
+  * These libe added to delete state after refereshing!
+  */
   useEffect(() => {
     window.addEventListener("beforeunload", (e) => {
-      delete e.returnValue;
       window.history.replaceState({}, document.title);
     });
   }, []);
@@ -94,7 +96,7 @@ export default function Movies() {
   const search = (e) => {
     let startWith = e.target.value;
     const regex = new RegExp(`^(${startWith}).*$`, "gi");
-    let newList = movies.filter(i => i.title.match(regex));
+    let newList = filterItems.filter(i => i.title.match(regex));
 
     setItems(newList);
     setSearchBox(e.target.value);
