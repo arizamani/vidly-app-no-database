@@ -9,14 +9,14 @@ export default function Layout(){
     return (
         <div className='content d-flex flex-column hmin-100'>
             <Header additionalClassName={""} menus={[
-                {Home: "/"},
-                {Movies: "/movies"},
-                {Customers: "/customers"},
-                {Rental: "/rentals"},
-                {Post: "/post"},
-                {Product: "/products"},
-                {Admin: "/admin/post"},
-                {Account: "/account/login"}
+                {Home: "./"},
+                {Movies: "./movies"},
+                {Customers: "./customers"},
+                {Rental: "./rentals"},
+                {Post: "./post"},
+                {Product: "./products"},
+                {Admin: "./admin/post"},
+                {Account: "./account/login"}
             ]}/>
             <Outlet />
             <Footer additionalClassName={"mt-auto mb-0"}/>

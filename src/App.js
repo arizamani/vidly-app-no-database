@@ -20,11 +20,11 @@ const Register = lazy(() => import('./pages/account/register'));
 
 export default function App() {
   const productsArray = [1,2,3];
-
+  console.log(process.env)
   return (
         <Suspense fallback={<div className="container">Loading...</div>}>
           <Routes>
-            <Route path='/' element={<Layout />}>
+            <Route path={process.env.REACT_APP_URI} element={<Layout />}>
               <Route index element={<Home name={"Arash"}/>} />
               <Route path='movies' element={<Movies />} />
               <Route path='movies/:id' element={<DetailMovies/>} />
